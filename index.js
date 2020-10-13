@@ -1,6 +1,6 @@
 class TalkRound extends HTMLElement {
   #MAX_LENGTH = 69;
-  #TAP = '\u00A0\u00A0\u00A0\u00A0';
+  #TAP = '\u00A0\u00A0\u00A0';
   #PLACE_HOLDER = '딜러님 딜이 좀 모자라서 전멸기를 봤는데 어떻게 생각하시는지 여쭤봐도 괜찮을까요?';
   #TEMPLATE = [
     [ 0,  0,  0, 67, 66, 65, 64, 63, 62, 61,  0,  0,  0],
@@ -77,12 +77,13 @@ class TalkRound extends HTMLElement {
   }
 
   #getRoundNode(word = '') {
-    const reverseWord = word.replace(/(\s*)/g, '').substring(0, this.#MAX_LENGTH).split('').reverse().join('');
+    const reverseWord = [...word.replace(/(\s*)/g, '')].reverse().join('');
     const nodes = [];
+
 
     const sentenceList = this.#TEMPLATE.map(line =>
       line
-        .map(pos => (pos === 0 || reverseWord[pos - 1] === undefined) ? this.#TAP : reverseWord[pos - 1])
+        .map(pos => (pos === 0 || reverseWord[pos - 1] === undefined) ? this.#TAP : this.#getEqualSizeChar(reverseWord[pos - 1]))
         .join(''));
     sentenceList.forEach(sentence => {
       const textNode = document.createTextNode(sentence);
@@ -93,6 +94,17 @@ class TalkRound extends HTMLElement {
     });
 
     return nodes;
+  }
+
+  #getEqualSizeChar(char) {
+    const size = new Blob([char]).size;
+    switch(size) {
+      case 1: return `\u00A0${char}\u00A0`;
+      case 2: return `${char}\u00A0`;
+      case 3: return char;
+      default: return this.#TAP;
+    }
+
   }
 }
 
