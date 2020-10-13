@@ -77,7 +77,7 @@ class TalkRound extends HTMLElement {
   }
 
   #getRoundNode(word = '') {
-    const reverseWord = [...word.replace(/(\s*)/g, '').substring(0, MAX_LENGTH)].reverse().join('');
+    const reverseWord = [...word.replace(/(\s*)/g, '').substring(0, this.#MAX_LENGTH)].reverse().join('');
     const nodes = [];
 
 
